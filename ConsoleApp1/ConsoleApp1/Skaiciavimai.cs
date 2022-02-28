@@ -7,7 +7,7 @@ namespace Uzd1
     internal class Matematika : Faktorialas
     {
         //field arba laukas
-        private double max, sk1,laikinas;
+        private double max, sk1;
         private int sk2;
         
         //getters ir setters

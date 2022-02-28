@@ -18,7 +18,7 @@ namespace Uzd1
             Matematika matematika = new Matematika(Math.Pow(10, 15), 1, 2);
             matematika.Skaiciavimas();
             
-            //faktorialo skaiciavimas
+            //faktorialo skaiciavimas is matematikos klases kuri yra paveldejusi setFact ir .Faktor is faktorialas.cs failo
             matematika.setFact(5);
             matematika.Faktor();
             
@@ -27,6 +27,8 @@ namespace Uzd1
 
             Console.WriteLine("Praejes laikas (Valandos:Minutes:Sekundes:Milisekundes) : {0:00}:{1:00}:{2:00}.{3}",
                             ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            //isjungti consoles programa
+            Environment.Exit(1);
         }
     }
 }
