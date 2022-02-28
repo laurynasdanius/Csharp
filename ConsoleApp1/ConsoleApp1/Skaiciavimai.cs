@@ -4,11 +4,13 @@ using System.Threading;
 
 namespace Uzd1
 {
-    internal class Matematika
+    internal class Matematika : Faktorialas
     {
+        //field arba laukas
         private double max, sk1,laikinas;
         private int sk2;
-
+        
+        //getters ir setters
         public double getMax()
         {
             return max;
@@ -33,36 +35,27 @@ namespace Uzd1
         {
             this.sk2 = sk2;
         }
+        //Klases konstruktorius su tuo paciu pavadinimu kaip ir klase
         public Matematika(double max, double sk1, int sk2)
         {
             this.max = max;
             this.sk1 = sk1;
             this.sk2 = sk2;
         }
+
+        //metodas
         public void Skaiciavimas()
         {
-            //1 2 2 4 8 32
-            // 2 2 4 8 32
-            // 2 4 8 32
+
             int skaiciuokle = 0;
-            double laikinas = 1;
 
-            while (this.sk1 < 32)
-            {   
-                // laikinas = 1 * 2
-                // sk1 = 2 * 1
-                //laikinas = 2 * 2
-                // sk1 = 4 * 2
-                //laikinas = 8 * 4
-                //sk1 = 8 * 16
-
-                this.laikinas = this.sk1 * this.laikinas;
-                this.sk1 = this.laikinas * this.sk1;
+            while (this.sk1 <= this.max)
+            {
+                this.sk1 = this.sk1 * this.sk2;
                 skaiciuokle++;
             }
             Console.WriteLine("Kiek kartu teko skaiciuoti? : " + skaiciuokle + " Koks galutinis skaicius? : " + this.sk1);
         }
 
-        
     }
 }

@@ -17,12 +17,16 @@ namespace Uzd1
 
             Matematika matematika = new Matematika(Math.Pow(10, 15), 1, 2);
             matematika.Skaiciavimas();
+            
+            //faktorialo skaiciavimas
+            matematika.setFact(5);
+            matematika.Faktor();
+            
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
 
             Console.WriteLine("Praejes laikas (Valandos:Minutes:Sekundes:Milisekundes) : {0:00}:{1:00}:{2:00}.{3}",
                             ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
-
         }
     }
 }
