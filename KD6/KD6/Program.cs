@@ -23,19 +23,12 @@ namespace StrongPasswordGen
             string SpecialCharacters = "!@#$%^&*()-_=+<,>.";
             string AllChar = CapitalLetters + SmallLetters + Digits + SpecialCharacters;
 
-            //salt
-            string Salt;
-
 
 
             Console.WriteLine("\nHow many passwords should be generated?:");
             PasswordAmount = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter the password length (chars):");
             PasswordLength = int.Parse(Console.ReadLine());
-            //Prie slaptazodzio pridesime "salt"
-            Console.WriteLine("Enter the salt of the password:");
-            Salt = Console.ReadLine();
-
 
             string[] AllPasswords = new string[PasswordAmount];
 
@@ -43,14 +36,13 @@ namespace StrongPasswordGen
             for (int i = 0; i < PasswordAmount; i++)
             {
                 StringBuilder sb = new StringBuilder();
-                //password length yra slaptazodzio ilgis, mes prie ivesto ilgio pridesime salt reiksme
                 for (int n = 0; n < PasswordLength; n++)
                 {
                     sb = sb.Append(GenerateChar(AllChar));
                 }
 
-                //Masyvas laikantis slaptazodziu reiksmes. Ikeliant slaptazodzio string reiksme i masyva uzdedamas "salt"
-                AllPasswords[i] = sb.ToString() + Salt;
+                //Masyvas laikantis slaptazodziu reiksmes. 
+                AllPasswords[i] = sb.ToString();
             }
 
             Console.WriteLine("Generated passwords:");
@@ -63,6 +55,7 @@ namespace StrongPasswordGen
             //Darbas su masyvu
             Console.WriteLine("The first generated password:" + AllPasswords.First());
             Console.WriteLine("The last generated password:" + AllPasswords.Last());
+            Console.WriteLine("The array of passwords length :" + AllPasswords.Length);
 
 
         }
