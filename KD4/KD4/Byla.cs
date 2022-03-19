@@ -5,150 +5,148 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;  // include the System.IO namespace
 using System.Diagnostics; // for getting the error message
+using System.Collections;
 
 namespace KD4
 {
     internal class Byla : IStruktura
     {
         // Specify a name for your top-level folder.
-        string subPath;
-        string byluPav;
-        string path;
-        string fileExtension = ".txt";
-        string fullPath;
-        string date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-        
-        public void setByluPav(string byluPav)
-        {
-            this.byluPav = byluPav;
+
+        //Naudojant konstruktorių kuriant objektą reikia nurodyti vieną privalomą argumentą - bylos vietą(nurodoma reliatyvus kelias*) .
+        private string folderPath;
+        private int fileAmmount;
+        //private string[] cratedFilesArr;
+        // Creates and initializes a new ArrayList.
+        ArrayList createdFilesArr = new ArrayList();
+        public async void writeFileNames(ArrayList fileNameArray)
+        {            
+            foreach (string fileName in fileNameArray)
+            {
+                Console.WriteLine(fileName);
+                
+                using StreamWriter file = new(Path.Combine(this.folderPath, "FileNames.txt"), true);
+
+                await file.WriteLineAsync("" + fileName);
+            }
         }
         public void ataskaita()
         {
             throw new NotImplementedException();
         }
 
-        public void failuSukurimas(int kiekis) {
- 
-                //Ciklas kuris sukurs failus pagal musu nurodyta kieki
-                Console.WriteLine("Creating files..");
-                for (int i = 0; i < kiekis; i++)
-                {
-                    //sujungiame folderio path su failu path be extension (pvz .txt)
-                    this.path = System.IO.Path.Combine(this.subPath, "failas" + i);
-
-                    // Kodo eilute sukurs faila, [ aplankalas\ ] failas[ numeris ] [fileExtension(.txt )]
-                    // CreateText metodas grazina StreamWriter objekta
-                    //fullpath string bus pilnam keliui ir prides extension
-                     this.fullPath = this.path + this.fileExtension;
-                    using (StreamWriter sw = File.CreateText(this.fullPath)) ;
-
-                    Console.WriteLine("File [" + this.fullPath + "] created..");
-                }
-                Console.WriteLine("Files have been created successfully");
-            }
-        
-        //Metodas skirtas failu sukurimui su failu kiekiu parametruose
-        public void kurti(int kiekis)
+        // Atidarome faila kuris turi visu sukurtu failu pavadinimus ir pereinam per kiekviena eilute
+        public bool arFailaiSutampa(string oldFileName,string newFileName)
         {
-            //Aplankalo pavadinimas
-             this.subPath = "Failai"; // Your code goes here
-
-            //try ir catch naudojama jeigu ivyktu klaida kuriant ir isvestu klaida
-            try
+            foreach (string line in File.ReadLines(Path.Combine(this.folderPath, "FileNames.txt")))
             {
-                //if tikrina ar Aplankalas neegzistuoja
-                if (!Directory.Exists(this.subPath))
+                
+                //jeigu failo pavadinimas readline faile sutampa su musu sukurtu failu
+                if (line == oldFileName)
                 {
-                    //jeigu aplankalas neegzistuoja tada isvedamas tekstas i console ir aplankalas yra sukuriamas
-                    Console.WriteLine("This folder : " + this.subPath + " Doesn't exist. Creating it now..");
-                    Directory.CreateDirectory(this.subPath);
-                    //ivykdomas failu sukurimas
-                    failuSukurimas(kiekis);
+                    //Console.WriteLine("old : " + Path.Combine(this.folderPath, oldFileName) + "new : " + Path.Combine(this.folderPath, newFileName));
+                    System.IO.File.Move(Path.Combine(this.folderPath, oldFileName), Path.Combine(this.folderPath, newFileName));
+                    return true;
                 }
-                //Jeigu aplankalas jau egzistuoja ir egzistuoja sukurti failai bus isvedama si zinute
-                else if (Directory.Exists(this.subPath) && File.Exists(this.fullPath))
+                else
                 {
-                    Console.WriteLine("This folder : " + this.subPath + " exist. This file " +this.fullPath+ " exist. Proceeding to rename files..");
-                    
-                        for (int i = 0; i < kiekis; i++)
-                        {
-                            //kadangi reikia pereiti per failus vel sujungiame pavadinimus kad i butu is naujo
-                            this.path = System.IO.Path.Combine(this.subPath, "failas" + i);
-                            //Move metodas pakeis dabartini pavadinima i kita pavadinima
-                            System.IO.File.Move(this.path + this.fileExtension, this.path + this.date + this.fileExtension);
-                           
-
-                            Console.WriteLine("File " + this.path + " created..");
-                        }
-                    
-
-                }
-                //jeigu aplankalas egzistuoja bet failai ne, sukuriami failai
-                else if (Directory.Exists(this.subPath) && !File.Exists(this.fullPath))
-                {
-                    Console.WriteLine("This folder : " + this.subPath + " exist. This file " + this.fullPath + " doesn't exist. Proceeding..");
-                    failuSukurimas(kiekis);
+                    return false;
                 }
             }
-            catch (Exception ex)
+            //butinas return kitaip metodas neveiks //reiikia potential fix
+            return false;
+        }
+        //public void failoVardoKeitimas(string oldFileName,string newFileName)
+        //{
+            
+        //}
+        public void failuSukurimas()
+        {
+            Random r = new Random();
+            int failuSkaicius = this.fileAmmount;
+            int rInt;
+
+            //int counter = 0;
+
+            
+            //System.Console.WriteLine("There were {0} lines.");
+
+
+            for (int i = 0; i <= failuSkaicius; i++)
             {
-                // Get stack trace for the exception with source file information
-                var st = new StackTrace(ex, true);
-                // Get the top stack frame
-                var frame = st.GetFrame(0);
-                // Get the line number from the stack frame
-                var line = frame.GetFileLineNumber();
+                string filePath = "Failas" + i + ".txt";
+
+                //tikriname ar sukurtas failo pavadinimas atitinka musu turimame failu vardu faile
+                arFailaiSutampa(filePath,"Test"+i+".txt");
+                
+                string fullPath = Path.Combine(this.folderPath, filePath);
+                //Ar jau yra tokia pagrindinė byla
+                //if (!File.Exists(fullPath))
+                //{
+                using (FileStream fs = File.Create(fullPath))
+                {
+                    Console.WriteLine(fullPath);
+                    //sukuriamas skaicius tarp 0 ir 1
+                    rInt = r.Next(0, 2); 
+                    byte[] info = new UTF8Encoding(true).GetBytes(rInt.ToString());
+                    // Add some information to the file.
+                    fs.Write(info, 0, info.Length);
+                }
+               
+                //Console.WriteLine("File "+ fullPath + " is created.");
+                //i array irasoma failo vieta
+
+                this.createdFilesArr.Add(filePath);
+
+                
+                //}
+                //else
+                //{
+                //    Console.WriteLine("Files already exist lol");
+                //}
             }
+            writeFileNames(this.createdFilesArr);
+            
+
+        }
+        //Metodas skirtas failu sukurimui su failu kiekiu parametruose
+        public void kurti()
+        {
+            if (Directory.Exists(this.folderPath))
+            {
+                Console.WriteLine("File \"{0}\" already exists.", this.folderPath);
+
+                failuSukurimas(); 
+            }
+            else
+            {
+                Console.WriteLine("File \"{0}\" doesnt already exist.", this.folderPath);
+                Directory.CreateDirectory(this.folderPath);
+                failuSukurimas();
+            }
+            
+
         }
 
         public void trinti()
         {
             throw new NotImplementedException();
         }
-        
-        //metodas kuris paims is vartotojo pavadinima failu kurimui
-        public void ivestiPav()
+
+        //Klases konstruktorius su tuo paciu pavadinimu kaip ir klase
+        public Byla(string folderPath, int fileAmmount)
         {
-            bool tinkamumas = false;
-            // ismetamas tekstas i konsole
-            Console.WriteLine("Koks bus failo pavadinimas : ");
-
-            // Sukuriamas string kintamasis kuris tures reiksme to, ka ivede vartotojas
-            this.setByluPav(Console.ReadLine());
-
-            // Print the value of the variable (userName), which will display the input value
-            Console.WriteLine("Ivestas failo pavadinimas : " + byluPav);
-
-            Console.WriteLine("Ar pavadinimas tinkamas? (y/n)" + byluPav);
-
-            while (tinkamumas != true)
-            {
-                if (Console.ReadKey().Key == ConsoleKey.Y)
-                {
-                        
-                
-                }else{
-                    // ismetamas tekstas i konsole
-                    Console.WriteLine("\n Koks bus failo pavadinimas : ");
-                    // Sukuriamas string kintamasis kuris tures reiksme to, ka ivede vartotojas
-                    this.setByluPav(Console.ReadLine());
-                    Console.WriteLine("Ar pavadinimas tinkamas? (y/n) \n" + byluPav);
-
-                }
-            }
-
+            this.folderPath = folderPath;
+            this.fileAmmount = fileAmmount;
         }
-        //public void kurti(int byluNum)
+        //static void Main(string[] args)
         //{
-        //kiek bylu generuosime
-        //   int byluNum;
+        //    Byla byla = new Byla("Failai",5);
+        //    ////byla.ivestiPav();
+        //    byla.kurti();
+            
+
+
         //}
-        static void Main(string[] args)
-        {
-            Byla byla = new Byla();
-            //byla.ivestiPav();
-            byla.kurti(2);
-            Console.WriteLine();
-        }
-}
+    }
 }

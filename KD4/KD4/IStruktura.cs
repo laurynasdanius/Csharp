@@ -3,7 +3,8 @@
 
 interface IStruktura
 {
-    void kurti(int kiekis); // interface method (does not have a body)
+    
+    void kurti(); // interface method (does not have a body)
     void ataskaita();
     void trinti();
 
