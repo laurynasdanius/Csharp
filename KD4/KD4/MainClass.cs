@@ -13,7 +13,7 @@ namespace KD4
             Byla byla = new Byla("Failai", 5);
             byla.kurti();
             //kvieciamas ataskaitos metodas su parametrais kaip aplankalo kuriame bus ataskaitos aplankalas ir pacios ataskaitos aplankalo pavadinimas
-            //byla.ataskaita(byla.folderPath,"Ataskaita");
+            byla.ataskaita("Ataskaita");
             //kvieciamas trinimo metodas, kuris istrins failus kuriuose yra 0, taciau ataskaita neatnaujinama..
             //byla.trinti();
 

@@ -5,7 +5,7 @@ interface IStruktura
 {
     
     void kurti(); // interface method (does not have a body)
-    void ataskaita(string pagrindinisAplankalas, string ataskaitosAplankaloPav);
+    void ataskaita(string ataskaitosAplankaloPav);
     void trinti();
 
 

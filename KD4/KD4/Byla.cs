@@ -86,11 +86,11 @@ namespace KD4
                 }   
             }
         }
-        public void ataskaitaWrite(string pagrindinisAplankalas, string ataskaitaReportPath)
+        public void ataskaitaWrite(string ataskaitaReportPath)
         {
             Console.WriteLine("Pradedame rasyti informacijos i ataskaitos faila");
 
-            foreach (string fileName in Directory.GetFiles(pagrindinisAplankalas))
+            foreach (string fileName in Directory.GetFiles(this.folderPath))
             {
                 //atsidarome faila skaitymui, kuris turi 0 arba 1
                 using (StreamReader sr = new StreamReader(fileName, Encoding.UTF8))
@@ -113,10 +113,10 @@ namespace KD4
             }
             Console.WriteLine("Ataskaita baigta, rezultatai surasyti faile esanciame {0}", ataskaitaReportPath);
         }
-        public void ataskaita(string pagrindinisAplankalas,string ataskaitosAplankaloPav)
+        public void ataskaita(string ataskaitosAplankaloPav)
         {
             //sukuriamas ataskaitos kelias
-            string ataskaitaPath= Path.Combine(pagrindinisAplankalas, ataskaitosAplankaloPav);
+            string ataskaitaPath= Path.Combine(this.folderPath, ataskaitosAplankaloPav);
             //sukuriamas ataskaitos failo kelias
             string reportName = "Report.txt";
             string ataskaitaReportPath = Path.Combine(ataskaitaPath, reportName);
@@ -124,12 +124,12 @@ namespace KD4
             //tikriname ar egzistuoja aplankalas
             if (File.Exists(ataskaitaPath))
             {       
-                ataskaitaWrite(pagrindinisAplankalas, ataskaitaReportPath);
+                ataskaitaWrite(ataskaitaReportPath);
             }
             else
             {
                 Directory.CreateDirectory(ataskaitaPath);
-                ataskaitaWrite(pagrindinisAplankalas, ataskaitaReportPath);
+                ataskaitaWrite(ataskaitaReportPath);
             }
         }
 
