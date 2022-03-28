@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;  // include the System.IO namespace
 using System.Diagnostics; // for getting the error message
-using System.Collections; //for working with collections
+using System.Collections;
 
 namespace KD4
 {
@@ -13,22 +13,17 @@ namespace KD4
     {
         private string folderPath;
         private int fileAmmount;
-        //ArrayList su folderyje esanciais failu pavadinimais
         ArrayList createdFilesArr = new ArrayList();
 
-        //metodas kuris grazins reiksme ar musu aplankalas tuscias ar ne
-        public bool IsDirectoryEmpty(string path)
+
+        public bool IsDirectoryEmpty()
         {
-            return !Directory.EnumerateFileSystemEntries(path).Any();
+            return !Directory.EnumerateFileSystemEntries(this.folderPath).Any();
         }
-        //metodas skirtas 0 arba 1 irasimui i faila
         public void writeToFile(string fullPath)
         {
             Random rInt = new Random();
-            //random skaicius, kuris bus arba 1 arba 0
             int randomNumber = rInt.Next(0, 2);
-            Console.WriteLine("Failas: {0}  sukurtas. Irasome {1} jame..", fullPath,randomNumber);
-
 
             using (var stream = new FileStream(fullPath, FileMode.CreateNew))
             {
@@ -36,49 +31,19 @@ namespace KD4
                 stream.Write(bytes, 0, bytes.Length);
             }
         }
-        public void fileRename(string oldFilePath,int i)
-        {
-            //dabartine data
-            string currentDate = DateTime.UtcNow.ToString("MM-dd-yyyy");
-            //naujas failo vardas
-            string newName = "Failas_"+i+"_"+ currentDate + ".txt";
-            //naujo failo kelias
-            string newPath = Path.Combine(this.folderPath, newName);
-
-            try
-            {
-                //metodas kuris paims sena kelia ir pakeis failo varda naudodamasis nauja kelia
-                File.Move(oldFilePath, newPath);
-
-                //jeigu senas failas nebeegzistuoja isves i konsole sia zinute
-                if (!File.Exists(oldFilePath))
-                {
-                    Console.WriteLine("Failas {0} buvo pervadintas i {1}.",oldFilePath,newPath);
-                }
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine("The renaming failed: {0}", e.ToString());
-            }
-        }
         public void createFiles()
         {
-            //ciklas kurs failus iki nurodyto fileAmmount, kuri jis gauna kai sukuriamas objektas
+            
             for (int i = 0; i <= this.fileAmmount; i++)
             {
-                //sukuriamas string su failo vardu
                 string fileName = "Failas" + i + ".txt";
-
-                //sukuriamas kelias i aplankala + failas kuri sukursime tenai
                 string fullPath = Path.Combine(this.folderPath, fileName);
 
-                //Jeigu failas kuri kuriame jau egzistuoja tai ji pervadinsime
-                if (File.Exists(fullPath))
+                //if file already exists rename it 
+                if (File.Exists(fileName))
                 {
-                    Console.WriteLine("Failas: {0}  jau egzituoja. Ji pervadiname..",fileName);
-                    fileRename(fullPath,i);
+                    fileRename();
                 }
-                //jeigu toks failas neegzistuoja ji sukursime ir ivesime duomenis
                 else
                 {
                     Console.WriteLine("File: {0}  neegzistuoja. Sukuriame..", fileName);
@@ -139,54 +104,53 @@ namespace KD4
             if (Directory.Exists(this.folderPath))
             {
                 //jeigu aplankalas egzistuoja patikriname ar failai jame egzistuoja
-                Console.WriteLine("Aplankalas \"{0}\" jau egzistuoja.", this.folderPath);
-                
-                //tikrina ar aplankalas tuscias
-                if (IsDirectoryEmpty(this.folderPath))
+                Console.WriteLine("Folder \"{0}\" already exists.", this.folderPath);
+                createFiles();
+
+                if (IsDirectoryEmpty())
                 {
-                    Console.WriteLine("Aplankalas \"{0}\" yra tuscias. Pradedame kurti failus", this.folderPath);
+                    Console.WriteLine("Folder \"{0}\" is empty. Proceeding to write files", this.folderPath);
                     createFiles();
                 }
                 else
                 {
-                    Console.WriteLine("Aplankalas \"{0}\" nera tuscias. Ieskome failu", this.folderPath);
-                    createFiles();
-                }  
+                    Console.WriteLine("Folder \"{0}\" not empty. Checking for files", this.folderPath);
+                }
+                
             }
             else
             {
                 //jeigu aplankalas neegzistuoja sukuriamas aplankalas 
-                Console.WriteLine("Aplankalas \"{0}\" neegzistuoja. Ji sukursime ir irasysime failus", this.folderPath);
+                Console.WriteLine("Folder \"{0}\" doesnt already exist.", this.folderPath);
                 Directory.CreateDirectory(this.folderPath);
 
                 //ir sukuriami failai
                 createFiles();
+                
+
             }
+
+
+
         }
 
         public void trinti()
         {
-            foreach (string fileName in Directory.GetFiles(this.folderPath))
-            {
-                //atsidarome faila skaitymui, kuris turi 0 arba 1
-                using (StreamReader sr = new StreamReader(fileName, Encoding.UTF8))
-                {
-                    string fileContent = sr.ReadToEnd();
-                    if (fileContent =="0")
-                    {
-                        sr.Close();
-                        Console.WriteLine("Failas: \"{0}\" turi 0, triname..",fileName);
-                        File.Delete(fileName);
-
-                    }
-                }
-            }
+            throw new NotImplementedException();
         }
         //Klases konstruktorius su tuo paciu pavadinimu kaip ir klase
         public Byla(string folderPath, int fileAmmount)
         {
             this.folderPath = folderPath;
             this.fileAmmount = fileAmmount;
+        }
+        static void Main(string[] args)
+        {
+            Byla byla = new Byla("Failai", 5);
+            byla.kurti();
+
+
+
         }
     }
 }
